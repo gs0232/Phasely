@@ -1,0 +1,19 @@
+session_name,category,duration,intensity,strength_score,cardio_score,low_impact_score
+Ganzkörper-Krafttraining im Fitnessstudio,Kraftsport,60,1.0,1.0,0.3,0.1
+Bodyweight Training (Fortgeschrittene),Kraftsport,45,0.9,0.9,0.5,0.3
+Kettlebell Intervalltraining,Kraftsport,30,0.85,0.8,0.7,0.2
+Beintraining mit Gewichten,Kraftsport,40,0.8,0.9,0.4,0.2
+Oberkörper-Zirkeltraining,Kraftsport,35,0.8,0.85,0.5,0.2
+Krafttraining mit Resistance Bands,Kraftsport,30,0.7,0.7,0.4,0.3
+Joggen im moderaten Tempo,Ausdauersport,40,0.7,0.3,1.0,0.3
+Intervall-Laufsession (Sprint/Gehen),Ausdauersport,30,0.9,0.4,1.0,0.2
+Schwimmen (Technik & Ausdauer),Ausdauersport,45,0.6,0.5,0.9,0.5
+Spinning Indoor,Ausdauersport,50,0.85,0.6,1.0,0.3
+Wandern mit Steigung,Ausdauersport,90,0.6,0.6,0.8,0.6
+Radfahren im Freien,Ausdauersport,60,0.7,0.4,0.9,0.4
+Yin Yoga zur Entspannung,Low Impact,60,0.3,0.2,0.1,1.0
+Pilates (Mittelstufe),Low Impact,50,0.5,0.5,0.3,0.9
+Stretching & Mobilisation,Low Impact,25,0.2,0.1,0.1,1.0
+Balance & Core Stabilisation,Low Impact,35,0.4,0.4,0.2,0.9
+"Radfahren (locker, flach)",Low Impact,45,0.5,0.3,0.6,0.8
+Walking im Grünen,Low Impact,40,0.4,0.2,0.5,0.9
