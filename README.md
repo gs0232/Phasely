@@ -1,5 +1,15 @@
 # Phasely
 
+## Nächste Steps
+- Streamlit aufsetzen
+    - Interface laut Wireframe bauen
+    - Wahrscheinliche Challenges: Auswählen der Sportart
+- Plot Funktionen bauen und verwenden
+- Farbschema und UI optimieren
+- OPTIONAL:
+    - Auswählen mehrer Sportarten --> ACHTUNG komplexere Funktion dafür schreiben
+    - API für Sporteinheiten
+
 ## Projekt installieren
 
 - Clonen
