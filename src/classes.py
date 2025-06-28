@@ -46,7 +46,7 @@ class CyclePhase():
     
 
 class SportSession():
-    def __init__(self, session_name, category, duration, intensity, strength_score, cardio_score, low_impact_score):
+    def __init__(self, session_name, category, duration, intensity, strength_score, cardio_score, low_impact_score, is_selected):
         """
         Initialize a SportSessions object
         """
@@ -57,6 +57,14 @@ class SportSession():
         self.strength_score = strength_score
         self.cardio_score = cardio_score
         self.low_impact_score = low_impact_score
+        self.is_selected = is_selected
+    
+
+    def select_session(self, blub):
+        if blub == "selected":
+            self.is_selected = True
+        elif blub == "deselected":
+            self.is_selected = False
 
 
     def __str__(self):
@@ -70,3 +78,5 @@ class SportSession():
                 f"Cardio Score: {self.cardio_score}, "
                 f"Low Impact Score: {self.low_impact_score}")
     
+
+# %%

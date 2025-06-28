@@ -1,4 +1,7 @@
+#%%
 import pandas as pd
+import numpy as np
+from src.classes import SportSession, CyclePhase
 
 def load_data(file_path):
     """
@@ -17,22 +20,76 @@ def load_data(file_path):
         print(f"Error loading data: {e}")
         return None
     
-def calculate_match_score(sport, phase, main_data, current_index):
-    """
-    Calculate the match score between the selected sport session and a cycle phase.
-    """
-    inhaltlicher_score = (
-        sport.strength_score * phase.strength_score +
-        sport.cardio_score * phase.cardio_score +
-        sport.low_impact_score * phase.low_impact_score
-    ) / 3
+def set_sport_sessions(file_path):
+    '''
+    Load data form a CSV file and create arrays for all sessions and individual categories.
 
-    print(inhaltlicher_score)
+    Parameters:
+    file_path (str): The path to the CSV file containing the sport sessions.
 
-    intensity_ratio = main_data["intensity_capacity"][current_index]
-    print(intensity_ratio)
-    if inhaltlicher_score > intensity_ratio:
-        final_score = round(intensity_ratio / inhaltlicher_score, 2)
-    elif inhaltlicher_score < intensity_ratio: 
-        final_score = round(inhaltlicher_score / intensity_ratio, 2)
-    return final_score
+    Returns:
+    sport_sessions: Array with Instances of the SportSession class
+    strength_sessions: All Intances from the sport_sessions array in the category of strength sports.
+    cardio_sessions: All Intances from the sport_sessions array in the category of cardio sports.
+    low_impact_sessions: All Intances from the sport_sessions array in the category of low-impact sports.
+    '''
+    sport_sessions_data = pd.read_csv(file_path)
+
+    sport_sessions = []
+
+    for i in sport_sessions_data.iterrows():
+        session = SportSession(
+            session_name=i[1]["session_name"],
+            category=i[1]["category"],
+            duration=i[1]["duration"],
+            intensity=i[1]["intensity"],
+            strength_score=i[1]["strength_score"],
+            cardio_score=i[1]["cardio_score"],
+            low_impact_score=i[1]["low_impact_score"],
+            is_selected=False
+            )
+        sport_sessions.append(session)
+
+    strength_sessions = []
+    cardio_sessions = []
+    low_impact_sessions = []
+
+    for i in sport_sessions:
+        if i.category == "Kraftsport":
+            strength_sessions.append(i)
+        elif i.category == "Ausdauersport":
+            cardio_sessions.append(i)
+        elif i.category == "Low Impact":
+            low_impact_sessions.append(i)
+
+    return sport_sessions, strength_sessions, cardio_sessions, low_impact_sessions
+
+    def __str_(self):
+        """
+        String representation of the SportSession object.
+        """
+        return (f"Session Name: {self.session_name}, "
+                f"Category: {self.category}, "
+                f"Duration: {self.duration}, "
+                f"Intensity: {self.intensity}, "
+                f"Strength Score: {self.strength_score}, "
+                f"Cardio Score: {self.cardio_score}, "
+                f"Low Impact Score: {self.low_impact_score}, "
+                f"Selected: {self.is_selected}")
+
+def set_cycle_phases():
+    '''
+    Create objects for the four existing cycle phases.
+
+    Returns:
+    cycle_phases: Array with Intances of the CyclePhase class
+    '''
+    cycle_phases = [
+        CyclePhase("Menstruation", np.arange(0, 0.2, 0.05), 0.35, 0.35, 1.0),
+        CyclePhase("Follikelphase", np.arange(0.5, 0.9, 0.05), 1.0, 0.8, 0.5),
+        CyclePhase("Ovulation", np.arange(0.9, 1.0, 0.05), 1.0, 1.0, 0.4),
+        CyclePhase("Lutealphase", np.arange(0.4, 0.8, 0.05), 0.8, 1.0, 1.0)
+    ]
+
+    return cycle_phases
+# %%
