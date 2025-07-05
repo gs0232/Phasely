@@ -24,7 +24,7 @@ class User():
         return f"User ID: {self.user_id}, Name: {self.user_name}, Age: {self.user_age}"
 
 class CyclePhase():
-    def __init__(self, phase_name, training_intensity, strength_score, cardio_score, low_impact_score):
+    def __init__(self, phase_name, training_intensity, strength_score, cardio_score, low_impact_score, description):
         """
         Initialize a CyclePhase object
         """
@@ -33,6 +33,7 @@ class CyclePhase():
         self.strength_score = strength_score
         self.cardio_score = cardio_score
         self.low_impact_score = low_impact_score
+        self.description = description
 
     def __str__(self):
         """

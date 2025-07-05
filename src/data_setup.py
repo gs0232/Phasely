@@ -85,10 +85,10 @@ def set_cycle_phases():
     cycle_phases: Array with Intances of the CyclePhase class
     '''
     cycle_phases = [
-        CyclePhase("Menstruation", np.arange(0, 0.2, 0.05), 0.35, 0.35, 1.0),
-        CyclePhase("Follikelphase", np.arange(0.5, 0.9, 0.05), 1.0, 0.8, 0.5),
-        CyclePhase("Ovulation", np.arange(0.9, 1.0, 0.05), 1.0, 1.0, 0.4),
-        CyclePhase("Lutealphase", np.arange(0.4, 0.8, 0.05), 0.8, 1.0, 1.0)
+        CyclePhase("Menstruation", np.arange(0, 0.2, 0.05), 0.35, 0.35, 1.0, "Grundsätzlich ist Sport während der Periode unbedenklich und kann sogar positive Auswirkungen haben. Während der Periode können Sportarten wie Yoga, leichtes Joggen, Schwimmen, Radfahren und Walking eine gute Option sein. Diese Sportarten können dazu beitragen, Krämpfe zu lindern und die Stimmung zu verbessern."),
+        CyclePhase("Follikelphase", np.arange(0.5, 0.9, 0.05), 1.0, 0.8, 0.5, "In dieser Phase ist dein Körper auf Krafttraining ausgelegt. Du solltest dich auf schwere Gewichte und niedrige Wiederholungszahlen konzentrieren, um Muskelmasse aufzubauen und deine Kraft zu steigern. Achte darauf, ausreichend Protein zu dir zu nehmen, um die Muskelreparatur zu unterstützen."),
+        CyclePhase("Ovulation", np.arange(0.9, 1.0, 0.05), 1.0, 1.0, 0.4, "In dieser Phase ist dein Körper auf Krafttraining ausgelegt. Du solltest dich auf schwere Gewichte und niedrige Wiederholungszahlen konzentrieren, um Muskelmasse aufzubauen und deine Kraft zu steigern. Achte darauf, ausreichend Protein zu dir zu nehmen, um die Muskelreparatur zu unterstützen."),
+        CyclePhase("Lutealphase", np.arange(0.4, 0.8, 0.05), 0.8, 1.0, 1.0, "In dieser Phase ist dein Körper auf Krafttraining ausgelegt. Du solltest dich auf schwere Gewichte und niedrige Wiederholungszahlen konzentrieren, um Muskelmasse aufzubauen und deine Kraft zu steigern. Achte darauf, ausreichend Protein zu dir zu nehmen, um die Muskelreparatur zu unterstützen.")
     ]
 
     return cycle_phases
