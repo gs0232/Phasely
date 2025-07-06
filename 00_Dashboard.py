@@ -63,10 +63,9 @@ textblock("Plane gezielt und passend zu deiner aktuellen Phase – Phasely hilft
 colleft, col1, colright = st.columns(3)
 with col1:
     button("show_trainingsplanung", "✨ Zyklusbasierte Trainingswoche erstellen ✨")
-    button("show_zyklusuebersicht", "Deine Zyklusübersicht")
 
 if st.session_state["show_trainingsplanung"]:
     show_trainingsplanung()
-    button("show_match_scores", "Matched dein Training zu deiner Phase?")
+    button("show_match_scores", "Berechne deinen Score")
     if st.session_state["show_match_scores"]:
         show_match_scores()
