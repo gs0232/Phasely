@@ -1,5 +1,10 @@
 
 from src.data_setup import set_cycle_phases
+from src.globals import (
+    MAIN_FILE_PATH, SPORT_SESSIONS_PATH, main_data,
+    sport_sessions, strength_sessions, cardio_sessions, low_impact_sessions,
+    cycle_phases, current_index, current_user, current_phase
+)
 
 def calculate_match_score_simple(sport, phase, main_data, current_index):
     """
@@ -21,19 +26,22 @@ def calculate_match_score_simple(sport, phase, main_data, current_index):
         final_score = round(inhaltlicher_score / intensity_ratio, 2)
     return final_score
 
-def calculate_scores_complex(sport_sessions, current_phase, main_data, current_index):
+def calculate_scores_complex(selected_sessions):
     """
+    selected_sessions = trainingsplanung()
+    
     Calculate the intensity, strength, cardio, and low-impact score between multiple selected sport sessions and the current cycle phase.
+
+    # Returns:
+    final_score
+    final_strength_score
+    final_cardio_score
+    final_low_impact_score
     """
-    selected_sessions = []
     each_general_score = []
     each_strength_score = []
     each_cardio_score = []
     each_low_impact_score = []
-
-    for i in sport_sessions:
-        if i.is_selected == True:
-            selected_sessions.append(i)
 
     for j in selected_sessions:
         # General Score sollte schauen ob die intensity der session im rahmen der training_intensity der current_phase liegt.

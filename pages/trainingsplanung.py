@@ -144,12 +144,14 @@ def show_trainingsplanung():
                         unsafe_allow_html=True
                     )
                     session_placeholder.append(session.session_name)
+                    selected_sessions.append(session)
                     if st.button("Entfernen", key=f"delete_{session.session_name}_{id(session)}"):
                         st.session_state.selected_sessions.remove(session)
+                        selected_sessions.remove(session)
                         st.experimental_rerun()
+
         else:
             st.write("Keine Sporteinheiten ausgewählt.")
-
 
     with st.container():
         st.markdown("""<h3>③ Plane deine Woche</h3>""", unsafe_allow_html=True)
@@ -164,8 +166,6 @@ def show_trainingsplanung():
         ]
         sorted_sessions = sort_items(sorted_sessions, direction="vertical", custom_style=custom_style, multi_containers=True)
 
-
-    # ...existing code...
 
     if not sorted_sessions == []:
         # 1. Max. Anzahl an Einheiten pro Tag ermitteln (für Zeilenanzahl)
@@ -197,6 +197,8 @@ def show_trainingsplanung():
             st.info("Bitte wähle mindestens eine Sporteinheit aus, um einen Wochenplan zu erstellen.")
     else:
         st.info("Bitte wähle mindestens eine Sporteinheit aus, um einen Wochenplan zu erstellen.")
+
+    return selected_sessions
 
 # %%
 selected_sport = cardio_sessions[3]  # Example: select the first strength session

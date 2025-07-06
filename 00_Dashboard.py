@@ -6,7 +6,8 @@ from src.globals import (
 )
 from pages.trainingsplanung import show_trainingsplanung
 from pages.zyklusuebersicht import show_zyklusuebersicht
-from src.interface_components import h1, h2, h3, textblock, h_divider, view_score_percentage, info_card, button, button_close, button_toggle
+from pages.gesamtscore import show_match_score
+from src.interface_components import h1, h2, h3, textblock, h_divider, view_score_percentage, info_card, button
 
 if "current_subject" not in st.session_state:
     current_subject = "No subject selected"
@@ -69,9 +70,12 @@ with col1:
     button("show_trainingsplanung", "✨ Zyklusbasierte Trainingswoche erstellen ✨")
     button("show_zyklusuebersicht", "Deine Zyklusübersicht")
 
-if st.session_state.get("show_trainingsplanung", False):
-    show_trainingsplanung()
+if st.session_state["show_trainingsplanung"]:
+    selected_sessions = show_trainingsplanung()
     button("show_match_score", "Matched dein Training zu deiner Phase?")
+    if st.session_state["show_match_score"]:
+        st.markdown(selected_sessions)
+        show_match_score(selected_sessions)
 
 if st.session_state["show_zyklusuebersicht"]:
     show_zyklusuebersicht()

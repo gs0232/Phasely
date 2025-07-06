@@ -99,24 +99,3 @@ def button(key:str, button_text:str):
 
     if st.button(button_text):
         st.session_state[key] = True
-
-def button_close(key:str, button_close_text:str):
-    '''
-    Insert the key of the Button which action you want to close again.
-    '''
-    if st.button(button_close_text):
-        st.session_state[key] = False
-
-def button_toggle(key:str, open_text:str, close_text:str, action):
-    # Session-Init
-    if key not in st.session_state:
-        st.session_state[key] = False
-
-    # Toggle-Button anzeigen
-    toggle_label = open_text if not st.session_state[key] else close_text
-    if st.button(toggle_label):
-        st.session_state[key] = not st.session_state[key]
-
-    # Inhalt der Trainingsplanung
-    if st.session_state[key]:
-        action  # ← Deine eigene Funktion hier
