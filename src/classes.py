@@ -59,13 +59,6 @@ class SportSession():
         self.cardio_score = cardio_score
         self.low_impact_score = low_impact_score
         self.is_selected = is_selected
-    
-
-    def select_session(self, blub):
-        if blub == "selected":
-            self.is_selected = True
-        elif blub == "deselected":
-            self.is_selected = False
 
 
     def __str__(self):

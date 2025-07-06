@@ -1,12 +1,7 @@
 import streamlit as st
-from src.globals import (
-    MAIN_FILE_PATH, SPORT_SESSIONS_PATH, main_data,
-    sport_sessions, strength_sessions, cardio_sessions, low_impact_sessions,
-    cycle_phases, current_index, current_user, current_phase
-)
+from src.globals import (current_user, current_phase)
 from pages.trainingsplanung import show_trainingsplanung
-from pages.zyklusuebersicht import show_zyklusuebersicht
-from pages.gesamtscore import show_match_score
+from pages.gesamtscore import show_match_scores
 from src.interface_components import h1, h2, h3, textblock, h_divider, view_score_percentage, info_card, button
 
 if "current_subject" not in st.session_state:
@@ -71,11 +66,7 @@ with col1:
     button("show_zyklusuebersicht", "Deine Zyklusübersicht")
 
 if st.session_state["show_trainingsplanung"]:
-    selected_sessions = show_trainingsplanung()
-    button("show_match_score", "Matched dein Training zu deiner Phase?")
-    if st.session_state["show_match_score"]:
-        st.markdown(selected_sessions)
-        show_match_score(selected_sessions)
-
-if st.session_state["show_zyklusuebersicht"]:
-    show_zyklusuebersicht()
+    show_trainingsplanung()
+    button("show_match_scores", "Matched dein Training zu deiner Phase?")
+    if st.session_state["show_match_scores"]:
+        show_match_scores()
