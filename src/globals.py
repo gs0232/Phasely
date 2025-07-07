@@ -20,3 +20,12 @@ for i in cycle_phases:
     if i.phase_name == current_phase_name:
         current_phase = i
         break
+
+colors = {
+    "Primary": "#CB997E",
+    "Primary-light": "#DDBEA9",
+    "Secondary": "#6B705C",
+    "Secondary-light": "#A7AC9A",
+    "Highlight": "#6665DD",
+    "Highlight-light": "#9B9ECE"
+}

@@ -84,17 +84,28 @@ def set_cycle_phases():
     Returns:
     cycle_phases: Array with Intances of the CyclePhase class
     '''
+    def inclusive_range(start, stop, step):
+        """
+        Gibt eine Liste von floats von start bis einschließlich stop mit gegebener Schrittweite zurück.
+        """
+        result = []
+        current = start
+        while current <= stop + 1e-9:  # kleiner Puffer wegen float-Rundungsfehler
+            result.append(round(current, 10))  # 10 Stellen für saubere Werte
+            current += step
+        return result
+
     cycle_phases = [
-        CyclePhase("Menstruation", np.arange(0.3, 0.6, 0.05), 0.2, 0.3, 0.5, 
+        CyclePhase("Menstruation", inclusive_range(0.3, 0.6, 0.05), 0.2, 0.3, 0.5, 
                    "Der Hormonspiegel ist niedrig, der Körper arbeitet ökonomisch, benötigt aber mitunter mehr Ruhe. " \
                    "Leichte Bewegung wie Yoga, Spazieren oder lockeres Radfahren kann Krämpfe lindern und das Wohlbefinden steigern."),
-        CyclePhase("Follikelphase", np.arange(0.6, 0.9, 0.05), 0.55, 0.35, 0.1, 
+        CyclePhase("Follikelphase", inclusive_range(0.6, 0.9, 0.05), 0.55, 0.35, 0.1, 
                    "Östrogen steigt an, die Energiebereitstellung ist effizient und die Regenerationsfähigkeit besonders hoch. " \
                    "Diese Phase eignet sich ideal für intensives Krafttraining, Ausdaueraufbau und Leistungssteigerung."),
-        CyclePhase("Ovulation", np.arange(0.7, 1.0, 0.05), 0.5, 0.3, 0.2, 
+        CyclePhase("Ovulation", inclusive_range(0.7, 1.0, 0.05), 0.5, 0.3, 0.2, 
                    "Östrogen erreicht seinen Höhepunkt, das zentrale Nervensystem ist leistungsfähig. " \
                    "Gleichzeitig sind Gelenke und Bänder etwas instabiler – Fokus auf Technik, Koordination und saubere Belastung."),
-        CyclePhase("Lutealphase", np.arange(0.5, 0.75, 0.05), 0.25, 0.35, 0.4, 
+        CyclePhase("Lutealphase", inclusive_range(0.5, 0.75, 0.05), 0.25, 0.35, 0.4, 
                    "Progesteron dominiert, die Körpertemperatur ist erhöht und manche spüren mehr Fatigue. " \
                    "Diese Phase eignet sich gut für moderate Ausdauer, Mobility, funktionelles Krafttraining und Achtsamkeit.")
     ]

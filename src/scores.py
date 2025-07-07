@@ -13,78 +13,75 @@ def calculate_match_scores(selected_sessions, current_phase):
     """
     if not selected_sessions:
         return (
-            pd.DataFrame(), 0, 0, 0, 0,
-            None, None,
-            {"overall": "–", "strength": "–", "cardio": "–", "low_impact": "–"}
+            pd.DataFrame(), 0, 0, 0, 0, 0,
+            {"overall": "–", "strength": "–", "cardio": "–", "low_impact": "–", "intensity": "–"},
         )
 
-    # Initialisierung
-    total_strength, total_cardio, total_low_impact, total_intensity = 0, 0, 0, 0
+    def percent(x): return int(round(x * 100))
 
-    # Match-Scores berechnen
-    for session in selected_sessions:
-        session.match_score = (
-            1
-            - abs(current_phase.strength_score - session.strength_score)
-            - abs(current_phase.cardio_score - session.cardio_score)
-            - abs(current_phase.low_impact_score - session.low_impact_score)
-            - abs(current_phase.training_intensity - session.intensity)
-        ) / 4  # Normiert auf 0–1
+    # 1. Summiere die Anteile der Kategorien
+    total_strength = sum(s.strength_score for s in selected_sessions)
+    total_cardio = sum(s.cardio_score for s in selected_sessions)
+    total_low_impact = sum(s.low_impact_score for s in selected_sessions)
 
-        total_strength += session.strength_score
-        total_cardio += session.cardio_score
-        total_low_impact += session.low_impact_score
-        total_intensity += session.intensity
+    total = total_strength + total_cardio + total_low_impact
+    if total == 0:
+        return (
+            pd.DataFrame(), 0, 0, 0, 0, 0,
+            {"overall": "–", "strength": "–", "cardio": "–", "low_impact": "–", "intensity": "–"},
+        )
 
-    # Durchschnittswerte berechnen
-    n = len(selected_sessions)
-    avg_strength = total_strength / n
-    avg_cardio = total_cardio / n
-    avg_low_impact = total_low_impact / n
-    avg_intensity = total_intensity / n
+    # 2. Prozentuelle Verteilung (normiert auf 100 %)
+    final_strength = total_strength / total
+    final_cardio = total_cardio / total
+    final_low_impact = total_low_impact / total
 
-    # Finaler Gesamtscore (je geringer die Abweichung, desto besser)
-    final_score = (
-        1
-        - abs(current_phase.strength_score - avg_strength)
-        - abs(current_phase.cardio_score - avg_cardio)
-        - abs(current_phase.low_impact_score - avg_low_impact)
-        - abs(current_phase.training_intensity - avg_intensity)
-    ) / 4
+    # 3. Berechne durchschnittliche Intensität (separat)
+    avg_intensity = sum(s.intensity for s in selected_sessions) / len(selected_sessions)
 
-    # Runde alles für Anzeige
-    def percent(x):
-        # Wenn x ein ndarray ist, nimm das erste Element
-        if isinstance(x, (np.ndarray, list)):
-            x = x[0]
-        return int(round(x * 100))
+    # 4. Intensitäts-Match (1.0 = perfekt, sonst linearer Abzug)
+    def match_training_intensity(intensity):
+        min_int = min(current_phase.training_intensity)
+        max_int = max(current_phase.training_intensity)
+        if min_int <= intensity <= max_int:
+            return 1.0
+        diff = abs(intensity - min_int) if intensity < min_int else abs(intensity - max_int)
+        return max(0.0, 1.0 - diff)
 
+    final_intensity_score = match_training_intensity(avg_intensity)
 
-    df = pd.DataFrame([
-        {
-            "Workout": s.session_name,
-            "Match": f"{percent(s.match_score)}%"
-        }
-        for s in selected_sessions
-    ])
+    # 5. Berechne finalen Gesamtscore (je geringer die Abweichung, desto besser)
+    deviation = (
+        abs(current_phase.strength_score - final_strength) +
+        abs(current_phase.cardio_score - final_cardio) +
+        abs(current_phase.low_impact_score - final_low_impact)
+    )
+    final_score = 1.0 - deviation  # max 1.0 → beste Übereinstimmung
 
-    #best_session = max(selected_sessions, key=lambda s: float(s.match_score), default=None)
-    #worst_session = min(selected_sessions, key=lambda s: float(s.match_score), default=None)
+    # 6. DataFrame zur Darstellung
+    df = pd.DataFrame([{
+        "Ausgewählte Workouts": s.session_name,
+        "Kraftanteil": f"{percent(s.strength_score)}%",
+        "Ausdaueranteil": f"{percent(s.cardio_score)}%",
+        "Low-Impact-Anteil": f"{percent(s.low_impact_score)}%",
+        "Intensität": f"{percent(s.intensity)}%",
+    } for s in selected_sessions])
 
+    # 7. Text-Scores für Anzeige
     score_percent_texts = {
         "overall": f"{percent(final_score)}%",
-        "strength": f"{percent(1 - abs(current_phase.strength_score - avg_strength))}%",
-        "cardio": f"{percent(1 - abs(current_phase.cardio_score - avg_cardio))}%",
-        "low_impact": f"{percent(1 - abs(current_phase.low_impact_score - avg_low_impact))}%"
+        "strength": f"{percent(final_strength)}%",
+        "cardio": f"{percent(final_cardio)}%",
+        "low_impact": f"{percent(final_low_impact)}%",
+        "intensity": f"{percent(avg_intensity)}%" if final_intensity_score > 0 else "0%"
     }
 
     return (
         df,
-        percent(final_score) / 100,
-        percent(1 - abs(current_phase.strength_score - avg_strength)) / 100,
-        percent(1 - abs(current_phase.cardio_score - avg_cardio)) / 100,
-        percent(1 - abs(current_phase.low_impact_score - avg_low_impact)) / 100,
-        #best_session.session_name if best_session else "–",
-        #worst_session.session_name if worst_session else "–",
-        score_percent_texts
+        final_score,
+        final_strength,
+        final_cardio,
+        final_low_impact,
+        final_intensity_score,
+        score_percent_texts,
     )
