@@ -15,13 +15,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
     )
 
-# %% Interface with Streamlit
-
-highlight_color = "#FF69B4"  # für pink
-mint = "#95d5b2"
-
-# Schriftgrößen und Layout
-score_font_size = "36px"
 
 # Titelbereich
 h1(f"""{current_user.user_name}'s Phasely Dashboard""")
@@ -55,17 +48,17 @@ with col4:
         </div>
         """, unsafe_allow_html=True)
 
+st.markdown("---")
+
+# Call-To-Action
+h2("Erstelle dein zyklusbasiertes Training")
+
 # Info-Bereich
 colleft, col1, col2, colrigth = st.columns([2, 4, 4, 2])
 with col1:
     info_card("Warum zyklusbasiertes Training?", "Dein Zyklus beeinflusst Energie, Belastbarkeit und Regeneration. Ein Training, das auf deine jeweilige Phase abgestimmt ist, kann effektiver, nachhaltiger und angenehmer sein.")
 with col2:
     info_card("Wie funktioniert das?", "Je nach Phase (z. B. Menstruation, Follikelphase) verändern sich Hormone, die dein Training beeinflussen. Phasely passt deine Workouts daran an und unterstützt dich mit datenbasierten Empfehlungen.")
-
-st.markdown("---")
-
-# Call-To-Action
-h2("Erstelle dein zyklusbasiertes Training")
 
 # Button und Session-State für Anzeige
 colleft, col1, colright = st.columns(3)

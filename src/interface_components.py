@@ -74,7 +74,7 @@ def info_card(heading_text, info_text):
             font-family: 'Inter', sans-serif;
             color: black;
             height: 100%;
-            margin-top: 80px;
+            margin-top: 40px;
             margin-bottom: 40px;
             text-align: left;
         ">
