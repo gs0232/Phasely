@@ -36,6 +36,7 @@ st.set_page_config(
 )
 
 #%% Titelbereich
+
 h1(f"{current_user.user_name}'s Phasely Dashboard")
 textblock(
     "Willkommen zu deinem Phasely Dashboard! "

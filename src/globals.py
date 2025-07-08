@@ -10,7 +10,7 @@ from src.data_setup import load_data, set_sport_sessions, set_cycle_phases
 from src.classes import User
 
 #%% Dateipfade zu den CSV-Dateien
-MAIN_FILE_PATH = "data/cycle_tracking_2025.csv"
+MAIN_FILE_PATH = "data/cycle_tracking_lutealphase.csv"
 SPORT_SESSIONS_PATH = "data/sport_sessions.csv"
 
 #%% Zyklusdaten laden
