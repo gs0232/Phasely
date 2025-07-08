@@ -1,21 +1,33 @@
 # Phasely
 
-## Nächste Steps
-- Streamlit aufsetzen
-    - Interface laut Wireframe bauen
-    - Wahrscheinliche Challenges: Auswählen der Sportart
-- Plot Funktionen bauen und verwenden
-- Farbschema und UI optimieren
-- OPTIONAL:
-    - Auswählen mehrer Sportarten --> ACHTUNG komplexere Funktion dafür schreiben
-    - API für Sporteinheiten
+## Autorinnen
+- Sophia Gwiggner
+- Lilly Feifel
+
+## Mission / Vision
 
 ## Projekt installieren
 
 - Clonen
 - pdm install
 
-# Was muss man in der main.py (theoretisch) selber defninieren?
-- Dateipfad zur cycle_tracking.csv
-- Name, Alter und ID der Userin
-- Wenn man andere Sporteinheiten möchte --> Pfad für CSV mit anderen Sporteinheiten
+## Versionen
+- Python 3.11.0
+- Streamlit 1.12.0
+
+## Erklärung der Dateien
+
+### Hauptverzeichnis
+- 00_Start.py
+    - Platzhalter
+- 00_Dashboard.py
+
+### Source-Ordner (src)
+- globals.py
+- classes.py
+- data_setup.py
+- interface_components.py
+- modules.py
+    - scores.py
+
+## KI-Verweis

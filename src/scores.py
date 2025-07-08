@@ -1,15 +1,32 @@
+"""
+scores.py
+
+Berechnet, wie gut ausgewählte Sporteinheiten zur aktuellen Zyklusphase passen.
+Gibt Einzelwerte, Gesamtwerte und Score-Texte zurück.
+"""
+
 import numpy as np
 import pandas as pd
 
+
 def calculate_match_scores(selected_sessions, current_phase):
     """
-    Berechnet, wie gut die ausgewählten Sporteinheiten zur aktuellen Zyklusphase passen.
+    Berechnet die Übereinstimmung ausgewählter Sporteinheiten mit der aktuellen Zyklusphase.
 
-    Rückgabe:
-    - DataFrame mit Einzelwerten pro Einheit
-    - Finaler Gesamtscore (Ø)
-    - Finaler Kraft-, Ausdauer- und Low-Impact-Score (Ø)
-    - Beste und schlechteste Einheit nach Match Score
+    Args:
+        selected_sessions (list): Liste von SportSession-Objekten.
+        current_phase (CyclePhase): Aktuelle Phase der Nutzerin.
+
+    Returns:
+        tuple: (
+            pd.DataFrame: Übersicht der ausgewählten Einheiten,
+            float: Finaler Gesamtscore (0.0–1.0),
+            float: Finaler Kraft-Score,
+            float: Finaler Ausdauer-Score,
+            float: Finaler Low-Impact-Score,
+            float: Durchschnittliche Intensität (0.0–1.0),
+            dict: Score-Texte für Anzeige (Prozentangaben als Strings)
+        )
     """
     if not selected_sessions:
         return (
@@ -36,29 +53,19 @@ def calculate_match_scores(selected_sessions, current_phase):
     final_cardio = total_cardio / total
     final_low_impact = total_low_impact / total
 
-    # 3. Berechne durchschnittliche Intensität (separat)
+    # 3. Durchschnittliche Intensität der Auswahl
     avg_intensity = sum(s.intensity for s in selected_sessions) / len(selected_sessions)
+    final_intensity_score = avg_intensity
 
-    # 4. Intensitäts-Match (1.0 = perfekt, sonst linearer Abzug)
-    def match_training_intensity(intensity):
-        min_int = min(current_phase.training_intensity)
-        max_int = max(current_phase.training_intensity)
-        if min_int <= intensity <= max_int:
-            return 1.0
-        diff = abs(intensity - min_int) if intensity < min_int else abs(intensity - max_int)
-        return max(0.0, 1.0 - diff)
-
-    final_intensity_score = match_training_intensity(avg_intensity)
-
-    # 5. Berechne finalen Gesamtscore (je geringer die Abweichung, desto besser)
+    # 4. Berechne finalen Gesamtscore (Abweichung von Phase-Werten)
     deviation = (
         abs(current_phase.strength_score - final_strength) +
         abs(current_phase.cardio_score - final_cardio) +
         abs(current_phase.low_impact_score - final_low_impact)
     )
-    final_score = 1.0 - deviation  # max 1.0 → beste Übereinstimmung
+    final_score = 1.0 - deviation
 
-    # 6. DataFrame zur Darstellung
+    # 5. DataFrame zur Anzeige
     df = pd.DataFrame([{
         "Ausgewählte Workouts": s.session_name,
         "Kraftanteil": f"{percent(s.strength_score)}%",
@@ -67,13 +74,13 @@ def calculate_match_scores(selected_sessions, current_phase):
         "Intensität": f"{percent(s.intensity)}%",
     } for s in selected_sessions])
 
-    # 7. Text-Scores für Anzeige
+    # 6. Score-Texte zur Anzeige
     score_percent_texts = {
         "overall": f"{percent(final_score)}%",
         "strength": f"{percent(final_strength)}%",
         "cardio": f"{percent(final_cardio)}%",
         "low_impact": f"{percent(final_low_impact)}%",
-        "intensity": f"{percent(avg_intensity)}%" if final_intensity_score > 0 else "0%"
+        "intensity": f"{percent(final_intensity_score)}%"
     }
 
     return (

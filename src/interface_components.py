@@ -1,70 +1,86 @@
+"""
+interface_components.py
+
+Enthält wiederverwendbare UI-Komponenten für die Phasely App, 
+darunter Überschriften, Textblöcke, Score-Anzeigen, Infokarten und Buttons.
+"""
+
 import streamlit as st
-from src.globals import (colors)
+from src.globals import get_color_palette
 
-def h1(heading_text):
-    '''
-    H1 Component. Put in desired text and/or variable.
-    '''
+
+def h1(heading_text: str):
+    """Große zentrierte Überschrift (H1) im Inter-Design."""
     st.markdown(f"""
-    <h1 style="text-align: center; font-family: 'Inter', cursive; color: black; width: 50vw; margin:auto;">
-        {heading_text}
-    </h1>""", unsafe_allow_html=True)
+        <h1 style="text-align: center; font-family: 'Inter', sans-serif; color: black; width: 50vw; margin:auto;">
+            {heading_text}
+        </h1>
+    """, unsafe_allow_html=True)
 
-def h2(heading_text):
-    '''
-    H2 Component. Put in desired text and/or variable.
-    '''
+
+def h2(heading_text: str):
+    """Zentrierte Zwischenüberschrift (H2)."""
     st.markdown(f"""
-    <h2 style="text-align: center; font-family: 'Inter', cursive; color: black; width: 50vw; margin-top:30px; margin-right:auto; margin-left: auto;">
-        {heading_text}
-    </h2>""", unsafe_allow_html=True)
+        <h2 style="text-align: center; font-family: 'Inter', sans-serif; color: black; width: 50vw; margin-top:30px; margin:auto;">
+            {heading_text}
+        </h2>
+    """, unsafe_allow_html=True)
 
-def h3(heading_text):
-    '''
-    H3 Component. Put in desired text and/or variable.
-    '''
+
+def h3(heading_text: str):
+    """Zentrierte Überschrift (H3) mit Abstand."""
     st.markdown(f"""
-    <h3 style="text-align: center; font-family: 'Inter', cursive; color: black; width: 50vw; margin-top:50px; margin-right:auto; margin-left: auto;">
-        {heading_text}
-    </h3>""", unsafe_allow_html=True)
+        <h3 style="text-align: center; font-family: 'Inter', sans-serif; color: black; width: 50vw; margin-top:50px; margin:auto;">
+            {heading_text}
+        </h3>
+    """, unsafe_allow_html=True)
 
-def h4(heading_text):
-    '''
-    H4 Component. Put in desired text and/or variable.
-    '''
+
+def h4(heading_text: str):
+    """Kleine Abschnittsüberschrift (H4)."""
     st.markdown(f"""
-    <h4 style="font-family: 'Inter', cursive; color: black; margin-top:30px;">
-        {heading_text}
-    </h4>""", unsafe_allow_html=True)
+        <h4 style="font-family: 'Inter', sans-serif; color: black; margin-top:30px;">
+            {heading_text}
+        </h4>
+    """, unsafe_allow_html=True)
 
-def textblock(text):
-    '''
-    P-Text Component. Put in desired text and/or variable.
-    '''
+
+def textblock(text: str):
+    """Zentrierter Fließtext-Block mit dezenter Formatierung."""
     st.write(f"""
-        <p style="text-align: center; font-family: 'Inter'; color: black; width: 40vw; margin-top: 20px; margin-right:auto; margin-left: auto;">
+        <p style="text-align: center; font-family: 'Inter', sans-serif; color: black; width: 40vw; margin-top: 20px; margin:auto;">
             {text}
-        </p>""", unsafe_allow_html=True)
+        </p>
+    """, unsafe_allow_html=True)
 
-def view_score_percentage(score, text, score_color):
-    '''
-    Block Component. Shows the percentage on top and the text underneath.
 
-    Should be used in columns!
-    '''
+def view_score_percentage(score: float, label: str, score_color: str):
+    """
+    Visualisiert einen Score als große Prozentzahl mit beschriftetem Label.
+
+    Args:
+        score (float): Score-Wert von 0.0 bis 1.0.
+        label (str): Beschriftung unter der Zahl.
+        score_color (str): Farbe der Prozentzahl.
+    """
     st.markdown(f"""
         <div style="text-align: center; font-family: 'Inter', sans-serif;">
-            <div style="font-size: 40px; font-weight: bold; color: {score_color}; margin-top: 20px;">{int(score * 100)}%</div>
-            <div style="margin-bottom: 8px;">{text}</div>
+            <div style="font-size: 40px; font-weight: bold; color: {score_color}; margin-top: 20px;">
+                {int(score * 100)}%
+            </div>
+            <div style="margin-bottom: 8px;">{label}</div>
         </div>
-        """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
-def info_card(heading_text, info_text):
-    '''
-    Card Component. Views a heading with text underneath. Has a background-color.
 
-    Should be used in columns!
-    '''
+def info_card(heading_text: str, info_text: str):
+    """
+    Info-Karte mit Titel und erklärendem Textblock.
+
+    Args:
+        heading_text (str): Überschrift.
+        info_text (str): Fließtext.
+    """
     st.markdown(f"""
         <div style="
             background-color: #F2F3F8;
@@ -78,28 +94,28 @@ def info_card(heading_text, info_text):
             margin-bottom: 40px;
             text-align: left;
         ">
-            <h4 style="color: black; margin-top:0px"; margin-bottom:0px;>{heading_text}</h4>
+            <h4 style="color: black; margin-top:0px;">{heading_text}</h4>
             <p style="font-size: 16px; line-height: 1.6;">
                 {info_text}
             </p>
         </div>
-        """, unsafe_allow_html=True)
-    
-def button(key:str, button_text:str):
-    '''
-    Button-Component + session configuration. 
-    
-    --> Add action underneath:
+    """, unsafe_allow_html=True)
 
-        if st.session_state[key]:
-            action
-    
 
-    Cannot be styled with HTML.
-    Can be put in columns.
-    '''
+def button(key: str, label: str):
+    """
+    Button-Komponente mit zugehörigem Session-State Key.
+
+    Args:
+        key (str): Key im st.session_state.
+        label (str): Beschriftung auf dem Button.
+    
+    Beispiel:
+        if st.session_state["mein_key"]:
+            ...
+    """
     if key not in st.session_state:
         st.session_state[key] = False
 
-    if st.button(button_text):
+    if st.button(label):
         st.session_state[key] = True

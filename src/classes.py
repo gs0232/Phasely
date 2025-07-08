@@ -1,19 +1,16 @@
-#%%
-import pandas as pd
-
 class User():
     
     def __init__(self, user_id, user_name, user_age): 
         """
-        Initialize a User object
+        Initialisierung.
         """
         self.user_id = user_id
         self.user_name = user_name
-        self.user_ager = user_age
+        self.user_age = user_age
 
     def assign_user_data(self, data):
         """
-        Set the main data for the user
+        Dem User eine CSV-Datei zuweisen.
         """
         self.data = data
 

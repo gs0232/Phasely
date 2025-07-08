@@ -1,36 +1,103 @@
+import streamlit as st
 from src.data_setup import load_data, set_sport_sessions, set_cycle_phases
 from src.classes import User
-import pandas as pd
 
-MAIN_FILE_PATH = "data/cycle_tracking_2025.csv"
-SPORT_SESSIONS_PATH = "data/sport_sessions.csv"
 
-main_data = load_data(MAIN_FILE_PATH)
-sport_sessions, strength_sessions, cardio_sessions, low_impact_sessions = set_sport_sessions(SPORT_SESSIONS_PATH)
-cycle_phases = set_cycle_phases()
+def get_main_data():
+    """
+    Gibt die geladenen Zyklusdaten zurück.
+    """
+    return st.session_state.get("main_data", None)
 
-first_future_index = main_data[main_data["is_historic"] == False].index[0]
-current_index = first_future_index - 1
 
-current_user = User(1, "Heidi", 22)
-current_user.assign_user_data(main_data)
+def get_user():
+    """
+    Gibt das User-Objekt aus dem Session-State zurück.
+    """
+    return st.session_state.get("current_user", None)
 
-current_phase_name = main_data["phase"].iloc[current_index]
-for i in cycle_phases:
-    if i.phase_name == current_phase_name:
-        current_phase = i
-        break
-next_phase = cycle_phases[cycle_phases.index(current_phase) + 1] if current_phase != cycle_phases[-1] else None
-next_phase_name = next_phase.phase_name if next_phase else "No next phase"
 
-current_cycle_day = int(main_data["cycle_day"].iloc[current_index])
+def get_sport_sessions():
+    """
+    Lädt die Sporteinheiten (falls nicht bereits vorhanden) und speichert sie im Session-State.
+    """
+    if "sport_sessions" not in st.session_state:
+        sessions = set_sport_sessions("data/sport_sessions.csv")
+        st.session_state.sport_sessions = sessions
+    return st.session_state.sport_sessions
 
-colors = {
-    "Primary": "#CB997E",
-    "Primary-light": "#DDBEA9",
-    "Secondary": "#6B705C",
-    "Secondary-light": "#A7AC9A",
-    "Highlight": "#6665DD",
-    "Highlight-light": "#9B9ECE"
-}
-# %%
+
+def get_cycle_phases():
+    """
+    Lädt die Zyklusphasen (falls nicht bereits vorhanden) und speichert sie im Session-State.
+    """
+    if "cycle_phases" not in st.session_state:
+        phases = set_cycle_phases()
+        st.session_state.cycle_phases = phases
+    return st.session_state.cycle_phases
+
+
+def get_current_index():
+    """
+    Gibt den Index des letzten historischen Tages zurück.
+    """
+    data = get_main_data()
+    if data is not None:
+        future_index = data[data["is_historic"] == False].index[0]
+        return future_index - 1
+    return None
+
+
+def get_current_phase():
+    """
+    Gibt das aktuelle CyclePhase-Objekt zurück.
+    """
+    data = get_main_data()
+    phases = get_cycle_phases()
+    index = get_current_index()
+
+    if data is None or index is None or phases is None:
+        return None
+
+    phase_name = data["phase"].iloc[index]
+    for p in phases:
+        if p.phase_name == phase_name:
+            return p
+    return None
+
+
+def get_current_cycle_day():
+    """
+    Gibt den aktuellen Zyklustag zurück.
+    """
+    data = get_main_data()
+    index = get_current_index()
+    if data is not None and index is not None:
+        return int(data["cycle_day"].iloc[index])
+    return None
+
+
+def get_next_phase():
+    """
+    Gibt die nächste Phase zurück (falls vorhanden).
+    """
+    current = get_current_phase()
+    phases = get_cycle_phases()
+    if current and phases:
+        idx = phases.index(current)
+        return phases[idx + 1] if idx + 1 < len(phases) else None
+    return None
+
+
+def get_color_palette():
+    """
+    Gibt das Farbschema zurück.
+    """
+    return {
+        "Primary": "#CB997E",
+        "Primary-light": "#DDBEA9",
+        "Secondary": "#6B705C",
+        "Secondary-light": "#A7AC9A",
+        "Highlight": "#6665DD",
+        "Highlight-light": "#9B9ECE"
+    }
