@@ -1,9 +1,7 @@
 import streamlit as st
-from src.globals import (current_user, current_phase, colors)
-#from pages.trainingsplanung import show_trainingsplanung
-#from pages.gesamtscore import show_match_scores
+from src.globals import (current_user, current_phase, colors, current_cycle_day)
 from src.interface_components import h1, h2, h3, textblock, view_score_percentage, info_card, button
-from src.modules import show_match_scores, show_selection, show_wochenplanung
+from src.modules import show_match_scores, show_selection, show_wochenplanung, current_cycle_plot_2
 
 if "current_subject" not in st.session_state:
     current_subject = "No subject selected"
@@ -31,8 +29,14 @@ textblock("Willkommen zu deinem Phasely Dashboard! Hier bekommst du reichlich In
 st.markdown("---")
 
 # Current-Phase Bereich
-h2(f"""Du bist in deiner <span style="color: {colors["Highlight"]};">{current_phase.phase_name}</span>""")
+h2(f"""Du bist in deiner <span style="color: {colors["Primary"]};">{current_phase.phase_name}</span>""")
 textblock(current_phase.description)
+
+with st.container():
+    textblock(f"""<span style="font-weight:bold;">Heute ist dein {current_cycle_day}. Zyklustag!</span>""")
+    colleft, col1, colright = st.columns([3,6,3])
+    with col1:
+        current_cycle_plot_2()
 
 # Trainingsverteilung
 h3("Optimale Trainingsverteilung")
@@ -71,4 +75,3 @@ with col1:
 if st.session_state["show_trainingsplanung"]:
     show_selection()
     show_match_scores()
-    #show_trainingsplanung()

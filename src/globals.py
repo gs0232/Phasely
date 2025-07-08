@@ -20,6 +20,10 @@ for i in cycle_phases:
     if i.phase_name == current_phase_name:
         current_phase = i
         break
+next_phase = cycle_phases[cycle_phases.index(current_phase) + 1] if current_phase != cycle_phases[-1] else None
+next_phase_name = next_phase.phase_name if next_phase else "No next phase"
+
+current_cycle_day = int(main_data["cycle_day"].iloc[current_index])
 
 colors = {
     "Primary": "#CB997E",
@@ -29,3 +33,4 @@ colors = {
     "Highlight": "#6665DD",
     "Highlight-light": "#9B9ECE"
 }
+# %%

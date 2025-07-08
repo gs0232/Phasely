@@ -1,13 +1,17 @@
+#%% Import
 import streamlit as st
+import numpy as np
 import pandas as pd
 from io import BytesIO
 import matplotlib.pyplot as plt
+from scipy.interpolate import make_interp_spline
 from streamlit_sortables import sort_items
 from streamlit import experimental_rerun
 from src.interface_components import h2, h3, h4, view_score_percentage, info_card, button, textblock
 from src.scores import calculate_match_scores
-from src.globals import (strength_sessions, cardio_sessions, low_impact_sessions, current_user, current_phase, colors)
+from src.globals import (MAIN_FILE_PATH, main_data, current_index, strength_sessions, cardio_sessions, low_impact_sessions, current_user, current_phase, colors, current_cycle_day)
 
+#%% Main
 def show_selection():
     # CSS für vertikale Linie & Layout
     st.markdown("""
@@ -254,3 +258,100 @@ def show_wochenplanung():
             st.info("Bitte wähle mindestens eine Sporteinheit aus, um einen Wochenplan zu erstellen.")
     else:
         st.info("Bitte wähle mindestens eine Sporteinheit aus, um einen Wochenplan zu erstellen.")
+
+
+def current_cycle_plot_2():
+    # Zyklusdaten vorbereiten
+    current_cycle_days_history = np.arange(1, current_cycle_day + 1)
+    current_cycle_days_future = np.arange(current_cycle_day, 29)
+
+    current_cycle_intensity_history = [
+        main_data["intensity_capacity"].iloc[i]
+        for i in range(current_index, current_index - current_cycle_day, -1)
+    ][::-1]
+
+    current_cycle_intensity_future = [
+        main_data["intensity_capacity"].iloc[i]
+        for i in range(current_index+1, int(current_index + (29 - current_cycle_day)))
+    ]
+
+    # Alle Daten zusammenführen
+    all_days = np.arange(1, 29)
+    all_intensity = current_cycle_intensity_history + current_cycle_intensity_future
+
+    # Glättung mit Spline
+    x_smooth = np.linspace(all_days.min(), all_days.max(), 300)
+    spline = make_interp_spline(all_days, all_intensity, k=3)
+    y_smooth = spline(x_smooth)
+
+    current_y = spline(current_cycle_day)
+
+    # Plot
+    fig, ax = plt.subplots(figsize=(10, 5))
+    fig.patch.set_facecolor("white")
+    ax.set_facecolor("white")
+
+    # Hole exakt 28 Tage der Phase-Daten
+    phases = list(main_data["phase"].iloc[current_index - current_cycle_day + 1 : current_index + 1])
+    phases += list(main_data["future_phase"].iloc[current_index + 1 : current_index + 1 + (28 - len(phases))])
+
+    phase_colors = {
+        "Menstruation": "#DDBEA9",
+        "Follikelphase": "#A5A58D",
+        "Ovulation": "#6B705C",
+        "Lutealphase": "#B7B7A4"
+    }
+
+    # Hintergrund einfärben
+    start_day = 1
+    current_phase = phases[0]
+
+    for day in range(1, len(phases) + 1):
+        phase = phases[day - 1]
+        if phase != current_phase:
+            # Vorherige Phase einfärben & labeln
+            ax.axvspan(start_day - 0.5, day - 0.5, color=phase_colors.get(current_phase, "#eee"), alpha=0.1)
+            ax.text(
+                (start_day + day - 1) / 2,
+                ax.get_ylim()[1] + 0.06,
+                current_phase,
+                ha="center",
+                va="bottom",
+                fontsize=10,
+                color=phase_colors.get(current_phase, "#444"),
+                alpha=1.0
+            )
+            current_phase = phase
+            start_day = day
+
+    # Letzte Phase bis zum Ende (Tag 28.5)
+    ax.axvspan(start_day - 0.5, 28.5, color=phase_colors.get(current_phase, "#eee"), alpha=0.1)
+    ax.text(
+        (start_day + 28) / 2,
+        ax.get_ylim()[1] + 0.06,
+        current_phase,
+        ha="center",
+        va="bottom",
+        fontsize=10,
+        color=phase_colors.get(current_phase, "#444"),
+        alpha=1.0
+    )
+
+    ax.plot(x_smooth, y_smooth, color=colors["Primary"], linewidth=2)
+    ax.plot(current_cycle_day, current_y, "o", color=colors["Highlight"], markersize=8, label="Heute")
+
+    # Achsen
+    ax.set_xlabel("Zyklustag", fontsize=12)
+    ax.set_ylabel("Intensitäts-Kapazität", fontsize=12)
+    ax.set_xticks(np.arange(1, 29, 2))
+    ax.set_ylim(0, 1.05)
+    ax.xaxis.set_label_coords(0.5, -0.08)
+    ax.yaxis.set_label_coords(-0.07, 0.5)
+
+    # Stil
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.grid(alpha=0.1)
+
+    st.pyplot(fig)
+# %%
