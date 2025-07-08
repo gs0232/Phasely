@@ -16,7 +16,6 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 from scipy.interpolate import make_interp_spline
 from streamlit_sortables import sort_items
-from streamlit import experimental_rerun
 
 from src.interface_components import (
     h2, h3, h4,
@@ -99,7 +98,7 @@ def show_selection():
                     )
                     if st.button("Entfernen", key=f"delete_{session.session_name}_{id(session)}"):
                         st.session_state.selected_sessions.remove(session)
-                        experimental_rerun()
+                        st.rerun()
     
 
 #%% Score-Berechnung
